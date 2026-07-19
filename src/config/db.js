@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// Ces valeurs viennent de ton fichier .env (voir .env.example)
+// Ces valeurs viennent de ton fichier .env (ou des variables d'environnement sur Render)
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -10,7 +10,14 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'postgres',
-    logging: false, // passe à console.log si tu veux voir les requêtes SQL générées
+    logging: false,
+    dialectOptions: {
+      // Neon (et la plupart des hébergeurs cloud) exigent une connexion SSL
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
   }
 );
 
